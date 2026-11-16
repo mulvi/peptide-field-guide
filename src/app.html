@@ -1949,7 +1949,7 @@ var PFG_PEPTIDES = [
     VIEWS.forEach(function (v) { $('view-' + v).hidden = v !== h; });
     $('topbar').hidden = mq.matches || h === 'home';
     $('topbar-title').textContent = TITLES[h];
-    $('fab').hidden = h === 'calculator' || h === 'finder';
+    $('fab').hidden = ['calculator', 'finder', 'vials', 'log', 'reminders', 'export', 'pro'].indexOf(h) >= 0;
     markNav();
     renderView(h);
     if (changed && !firstRoute) {
@@ -1973,6 +1973,10 @@ var PFG_PEPTIDES = [
     else if (h === 'export') renderExport();
   }
   function go(h) { if (location.hash === '#' + h) route(); else location.hash = '#' + h; }
+  // A sign-in link opened in a tab that already has the app open only changes the hash, so handle it here too.
+  window.addEventListener('hashchange', function () {
+    if (/(^#|&)(access_token|error|error_code|error_description)=/.test(location.hash || '')) { readAuthHash(); location.reload(); }
+  });
   window.addEventListener('hashchange', route);
   if (mq.addEventListener) mq.addEventListener('change', route); else if (mq.addListener) mq.addListener(route);
   function onScroll() { $('topbar').classList.toggle('scrolled', window.scrollY > 40); }
