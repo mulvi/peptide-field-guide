@@ -192,6 +192,10 @@ h1, h2, h3, p { margin: 0; }
 .g-calculator { color: var(--ic-calc); }
 .g-safety { color: var(--ic-safety); }
 .g-pro { color: var(--accent); }
+.welcome { background: var(--accent-soft); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; margin-block: 6px 18px; min-width: 0; }
+.welcome-title { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+.welcome-text { color: var(--fg-2); line-height: 1.5; max-width: 60ch; }
+.welcome .btn-row { margin-top: 4px; }
 .g-dosing { color: var(--ic-upcoming); }
 .g-vials { color: var(--ic-finder); }
 .g-log { color: var(--ic-calc); }
@@ -725,6 +729,16 @@ h1, h2, h3, p { margin: 0; }
           <h1 class="view-title" id="home-title" tabindex="-1">Peptide Field Guide</h1>
         </div>
       </div>
+      <div class="welcome" id="welcome-home" hidden>
+        <p class="welcome-title">A free calculator and evidence guide for peptides.</p>
+        <p class="welcome-text">Work out a dose in syringe units, see what the research shows for each peptide, and keep a schedule. No ads and nothing for sale. It does the maths and does not tell you what to take.</p>
+        <div class="btn-row">
+          <a class="btn small" href="#calculator">Calculate a dose</a>
+          <a class="btn secondary small" href="#library">Look up a peptide</a>
+          <a class="btn secondary small" href="#finder">What fits me</a>
+          <button type="button" class="btn ghost small" data-welcome-dismiss>Got it</button>
+        </div>
+      </div>
       <nav class="nav home-list" id="nav-home" aria-label="Main navigation"></nav>
       <div class="home-foot">
         <button type="button" class="theme-btn" id="theme-btn-home" data-theme-btn></button>
@@ -735,6 +749,16 @@ h1, h2, h3, p { margin: 0; }
     <section class="view" id="view-today" hidden aria-labelledby="today-title">
       <div class="view-head"><span class="glyph g-today" data-icon="today"></span><h1 class="view-title" id="today-title" tabindex="-1">Today</h1></div>
       <p class="today-date" id="today-date"></p>
+      <div class="welcome" id="welcome-today" hidden>
+        <p class="welcome-title">A free calculator and evidence guide for peptides.</p>
+        <p class="welcome-text">Work out a dose in syringe units, see what the research shows for each peptide, and keep a schedule. No ads and nothing for sale. It does the maths and does not tell you what to take.</p>
+        <div class="btn-row">
+          <a class="btn small" href="#calculator">Calculate a dose</a>
+          <a class="btn secondary small" href="#library">Look up a peptide</a>
+          <a class="btn secondary small" href="#finder">What fits me</a>
+          <button type="button" class="btn ghost small" data-welcome-dismiss>Got it</button>
+        </div>
+      </div>
       <div id="today-pro-line" hidden></div>
       <div id="today-body"></div>
     </section>
@@ -935,7 +959,7 @@ h1, h2, h3, p { margin: 0; }
         <h2>Privacy</h2>
         <p>Without signing in, your schedules and ticked doses stay in this browser and are never sent anywhere.</p>
         <p>If you sign in to Pro, your schedules, ticked doses, vials and log entries are stored on our server under your account so they sync between your devices. You can delete them at any time from the Pro page. Sign-in uses only your email address.</p>
-        <p>The site counts visits using a random number stored in your browser, once a day. It records no name, email, location or anything you type into the calculator. The Pro list stores only the email address you choose to give.</p>
+        <p>The site counts visits using a random number stored in your browser, once a day, along with which site or link brought you here. It records no name, email, location or anything you type into the calculator. The Pro list stores only the email address you choose to give.</p>
       </div>
     </section>
 
@@ -1951,6 +1975,7 @@ var PFG_PEPTIDES = [
     $('topbar-title').textContent = TITLES[h];
     $('fab').hidden = ['calculator', 'finder', 'vials', 'log', 'reminders', 'export', 'pro'].indexOf(h) >= 0;
     markNav();
+    renderWelcome();
     renderView(h);
     if (changed && !firstRoute) {
       window.scrollTo(0, 0);
@@ -1960,6 +1985,18 @@ var PFG_PEPTIDES = [
     firstRoute = false;
     onScroll();
   }
+  // New-visitor explainer: shown until the visitor signs in or taps "Got it".
+  function welcomeDismissed() { try { return localStorage.getItem('pfg.welcome') === 'off'; } catch (e) { return false; } }
+  function renderWelcome() {
+    var show = !welcomeDismissed() && !(typeof auth !== 'undefined' && auth);
+    ['welcome-today', 'welcome-home'].forEach(function (id) { var el = $(id); if (el) el.hidden = !show; });
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target && e.target.closest ? e.target.closest('[data-welcome-dismiss]') : null;
+    if (!t) return;
+    try { localStorage.setItem('pfg.welcome', 'off'); } catch (err) { /* stays visible this session only */ }
+    ['welcome-today', 'welcome-home'].forEach(function (id) { var el = $(id); if (el) el.hidden = true; });
+  });
   function renderView(h) {
     if (h === 'today') renderToday();
     else if (h === 'upcoming') renderUpcoming();
@@ -1989,9 +2026,21 @@ var PFG_PEPTIDES = [
       if (!/^https?:$/.test(location.protocol) || /claude\.ai|claudeusercontent|localhost|127\.0\.0\.1/.test(location.hostname)) return;
       var day = new Date().toISOString().slice(0, 10);
       var raw = localStorage.getItem('pfg.visit'), v = raw ? JSON.parse(raw) : {};
+      // Where the visitor first came from: ?src=ig on the link, else the referring site. Kept from the first visit.
+      if (!v.src) {
+        var src = '';
+        try { var q = new URLSearchParams(location.search); src = q.get('src') || q.get('utm_source') || ''; } catch (e1) {}
+        if (!src) {
+          var ref = '';
+          try { ref = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e2) {}
+          src = !ref ? 'direct' : /instagram/.test(ref) ? 'ig' : /tiktok/.test(ref) ? 'tiktok' : /youtube|youtu\.be/.test(ref) ? 'youtube' : /reddit/.test(ref) ? 'reddit' : /facebook|fb\./.test(ref) ? 'facebook' : /discord/.test(ref) ? 'discord' : /google\./.test(ref) ? 'google' : /bing\.|duckduckgo/.test(ref) ? 'search' : /(^|\.)x\.com$|twitter|t\.co$/.test(ref) ? 'x' : 'other';
+        }
+        v.src = String(src).toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24) || 'direct';
+        try { localStorage.setItem('pfg.visit', JSON.stringify(v)); } catch (e3) {}
+      }
       if (v.day === day) return;
       if (!v.id) v.id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, function () { return (Math.random() * 16 | 0).toString(16); });
-      fetch(SB_URL + '/rest/v1/visits', { method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' }, body: JSON.stringify({ visitor: v.id }) })
+      fetch(SB_URL + '/rest/v1/visits', { method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' }, body: JSON.stringify({ visitor: v.id, source: v.src }) })
         .then(function (r) { if (r.ok || r.status === 409) { v.day = day; try { localStorage.setItem('pfg.visit', JSON.stringify(v)); } catch (e) {} } })
         .catch(function () {});
     } catch (e) {}
