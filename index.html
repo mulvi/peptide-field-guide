@@ -193,6 +193,17 @@ h1, h2, h3, p { margin: 0; }
 .g-calculator { color: var(--ic-calc); }
 .g-safety { color: var(--ic-safety); }
 .g-pro { color: var(--accent); }
+.g-dosing { color: var(--ic-upcoming); }
+.dose-list { display: flex; flex-direction: column; }
+.dose-item { padding-block: 14px; border-top: 1px solid var(--hair); display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.dose-item:last-child { border-bottom: 1px solid var(--hair); }
+.dose-name { font-weight: 600; font-size: 16px; }
+.dose-name small { font-weight: 500; color: var(--fg-2); font-size: 13px; }
+.dose-facts { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 4px 12px; font-size: 14px; }
+.dose-facts dt { color: var(--fg-2); }
+.dose-facts dd { margin: 0; min-width: 0; }
+.dose-points { display: flex; flex-direction: column; gap: 8px; padding-left: 20px; }
+@media (max-width: 480px) { .dose-facts { grid-template-columns: minmax(0, 1fr); gap: 0 0; } .dose-facts dt { padding-top: 6px; font-size: 12px; } }
 .pro-form { display: flex; flex-direction: column; gap: 14px; max-width: 420px; padding-block: 8px 0; }
 .pro-list { display: flex; flex-direction: column; gap: 8px; padding-left: 20px; }
 .side-foot { margin-top: auto; padding-inline: 10px; display: flex; flex-direction: column; gap: 10px; }
@@ -722,7 +733,7 @@ h1, h2, h3, p { margin: 0; }
 
     <section class="view" id="view-calculator" hidden aria-labelledby="calculator-title">
       <div class="view-head"><span class="glyph g-calculator" data-icon="calculator"></span><h1 class="view-title" id="calculator-title" tabindex="-1">Calculator</h1></div>
-      <p class="view-sub">Reconstitution, dose volume and schedule maths. Enter your own dose. This tool does the maths and does not recommend doses.</p>
+      <p class="view-sub">Reconstitution, dose volume and schedule maths. Enter your own dose. This tool does the maths and does not recommend doses. Labelled schedules are in the <a href="#dosing">Dosing guide</a>.</p>
 
       <form id="calc-form" novalidate>
         <div class="form-block">
@@ -884,6 +895,62 @@ h1, h2, h3, p { margin: 0; }
           <li>Public safety communications from regulators such as the FDA and other national medicines agencies.</li>
         </ul>
         <p class="disclaimer">Educational only. Not medical advice.</p>
+        <h2>Privacy</h2>
+        <p>Your schedules and ticked doses stay in this browser and are never sent anywhere. The site counts visits using a random number stored in your browser, once a day. It records no name, email, location or anything you type into the calculator. The Pro list stores only the email address you choose to give.</p>
+      </div>
+    </section>
+
+    <section class="view" id="view-dosing" hidden aria-labelledby="dosing-title">
+      <div class="view-head"><span class="glyph g-dosing" data-icon="dosing"></span><h1 class="view-title" id="dosing-title" tabindex="-1">Dosing guide</h1></div>
+      <p class="view-sub">How dosing schedules work, what approved labels say, and what published trials used.</p>
+      <div class="prose">
+        <div class="note info"><span data-icon="info"></span><div><strong>This page reports. It does not recommend.</strong> Label schedules are summaries of FDA prescribing information. Trial doses are what researchers gave under supervision. Neither tells you what you should take.</div></div>
+
+        <h2>How schedules work</h2>
+        <ul class="dose-points">
+          <li><strong>Doses step up slowly.</strong> Starting low and raising the dose every few weeks gives the body time to adjust and reduces nausea and other side effects. Labels set a minimum time on each step, usually 4 weeks.</li>
+          <li><strong>Half-life sets the frequency.</strong> Semaglutide stays in the body for about a week and tirzepatide for about 5 days, so both are weekly. Liraglutide lasts about 13 hours, so it is daily.</li>
+          <li><strong>Levels build for weeks.</strong> A weekly medicine takes about 4 to 5 weeks to reach a steady level. That is why raising the dose early adds side effects without adding benefit.</li>
+          <li><strong>Some doses depend on body weight.</strong> A dose written as mcg per kg is multiplied by your weight. For example, 30 mcg per kg at 80 kg is 2,400 mcg, which is 2.4 mg.</li>
+          <li><strong>Units are volume.</strong> 1 mg is 1,000 mcg. Syringe units measure liquid (100 units is 1 mL), so the same number of units can hold very different amounts of peptide. The <a href="#calculator">Calculator</a> converts between them.</li>
+          <li><strong>A range is a ceiling and a floor.</strong> Labels aim for the lowest dose that works and is tolerated. Side effects rise with dose.</li>
+          <li><strong>Never double up.</strong> No label tells you to take two doses to make up for a missed one.</li>
+          <li><strong>Cycling is untested.</strong> Patterns such as weeks on and weeks off are common online for unapproved peptides. No controlled trial has tested them.</li>
+        </ul>
+
+        <h2>Approved medicines: labelled schedules</h2>
+        <div class="dose-list">
+          <div class="dose-item"><div class="dose-name">Semaglutide <small>Wegovy, weight management</small></div><dl class="dose-facts"><dt>Range</dt><dd>0.25 mg to 2.4 mg, once weekly</dd><dt>Schedule</dt><dd>0.25 mg for 4 weeks, then 0.5 mg, 1 mg and 1.7 mg for 4 weeks each, then 2.4 mg. Some people stay on 1.7 mg.</dd><dt>Missed dose</dt><dd>Take it if the next dose is more than 2 days away. Otherwise skip it. After more than 2 missed doses in a row, ask your prescriber whether to restart the steps.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Semaglutide <small>Ozempic, type 2 diabetes</small></div><dl class="dose-facts"><dt>Range</dt><dd>0.25 mg to 2 mg, once weekly</dd><dt>Schedule</dt><dd>0.25 mg for 4 weeks, then 0.5 mg. Increases to 1 mg and then 2 mg come after at least 4 weeks on the current dose, only if needed.</dd><dt>Missed dose</dt><dd>Take it within 5 days of the missed day. After that, skip it.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Tirzepatide <small>Mounjaro, Zepbound</small></div><dl class="dose-facts"><dt>Range</dt><dd>2.5 mg to 15 mg, once weekly</dd><dt>Schedule</dt><dd>2.5 mg for 4 weeks (a starting dose only), then 5 mg. Increases are 2.5 mg at a time, after at least 4 weeks on the current dose. Maintenance is 5 mg, 10 mg or 15 mg.</dd><dt>Missed dose</dt><dd>Take it within 4 days of the missed day. After that, skip it.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Liraglutide <small>Saxenda, weight management</small></div><dl class="dose-facts"><dt>Range</dt><dd>0.6 mg to 3 mg, once daily</dd><dt>Schedule</dt><dd>0.6 mg for 1 week, then up by 0.6 mg each week (1.2, 1.8, 2.4) to 3 mg.</dd><dt>Missed dose</dt><dd>Skip it and take the next dose as usual. Never double up. After more than 3 days without a dose, the label says to restart at 0.6 mg.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Liraglutide <small>Victoza, type 2 diabetes</small></div><dl class="dose-facts"><dt>Range</dt><dd>0.6 mg to 1.8 mg, once daily</dd><dt>Schedule</dt><dd>0.6 mg for 1 week, then 1.2 mg. An increase to 1.8 mg is possible if needed.</dd><dt>Missed dose</dt><dd>Same rule as Saxenda.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Tesamorelin <small>Egrifta SV</small></div><dl class="dose-facts"><dt>Dose</dt><dd>1.4 mg once daily, fixed. There are no steps.</dd><dt>Notes</dt><dd>Approved only for excess abdominal fat in HIV lipodystrophy. Other Egrifta formulations use different amounts, so follow the label for your product.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Bremelanotide <small>Vyleesi</small></div><dl class="dose-facts"><dt>Dose</dt><dd>1.75 mg as needed, at least 45 minutes before sexual activity.</dd><dt>Limits</dt><dd>No more than 1 dose in 24 hours and no more than 8 doses a month. The label says to stop after 8 weeks without improvement.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Setmelanotide <small>Imcivree</small></div><dl class="dose-facts"><dt>Schedule</dt><dd>For adults the label starts at 2 mg once daily for 2 weeks, then 3 mg once daily if tolerated. Children start lower.</dd><dt>Notes</dt><dd>Only for specific rare genetic forms of obesity, confirmed by testing and managed by a specialist.</dd></dl></div>
+        </div>
+
+        <h2>Approved outside the US</h2>
+        <div class="dose-list">
+          <div class="dose-item"><div class="dose-name">Thymosin alpha-1 <small>Zadaxin, approved in some countries</small></div><dl class="dose-facts"><dt>Label dose</dt><dd>1.6 mg under the skin twice a week, for 6 months, in the hepatitis B indication.</dd><dt>Notes</dt><dd>Not FDA-approved. Other uses seen online have no labelled dose.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Semax and Selank <small>approved in Russia</small></div><dl class="dose-facts"><dt>Form</dt><dd>Nasal drops, given in short courses.</dd><dt>Notes</dt><dd>Dosing follows the Russian product label, which this guide does not reproduce. Neither is approved in the US, UK or EU.</dd></dl></div>
+        </div>
+
+        <h2>Doses used in published trials</h2>
+        <p>These are records of what researchers tested. They are not recommendations, and several of these trials failed.</p>
+        <div class="dose-list">
+          <div class="dose-item"><div class="dose-name">Retatrutide <small>phase 2 obesity trial, 2023</small></div><dl class="dose-facts"><dt>Doses tested</dt><dd>1 mg, 4 mg, 8 mg or 12 mg once weekly for 48 weeks.</dd><dt>How</dt><dd>The higher doses were reached in steps, starting at 2 mg or 4 mg.</dd><dt>Status</dt><dd>Investigational. There is no approved product and no label.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Sermorelin <small>former Geref label</small></div><dl class="dose-facts"><dt>Doses tested</dt><dd>30 mcg per kg of body weight, once daily at bedtime, in children with growth hormone deficiency.</dd><dt>Status</dt><dd>That product is no longer sold. Doses from compounding pharmacies are set by the prescriber.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">CJC-1295 <small>small healthy-volunteer studies, 2006</small></div><dl class="dose-facts"><dt>Doses tested</dt><dd>Weight-based, about 30 to 60 mcg per kg, given weekly or every two weeks.</dd><dt>Status</dt><dd>Development stopped. No trial showed a health benefit, so no dose is established.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Ipamorelin <small>phase 2 trial after bowel surgery</small></div><dl class="dose-facts"><dt>Doses tested</dt><dd>0.03 mg per kg into a vein, twice daily for up to 7 days, in hospital.</dd><dt>Status</dt><dd>The trial showed no benefit. The route and setting differ from how it is sold online.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">AOD-9604 <small>obesity trials</small></div><dl class="dose-facts"><dt>Doses tested</dt><dd>Daily oral tablets, mostly 1 mg a day or less in the largest trial.</dd><dt>Status</dt><dd>The trial did not show meaningful weight loss. The injected form sold online is not what the main trials tested.</dd></dl></div>
+          <div class="dose-item"><div class="dose-name">Collagen peptides <small>oral supplement trials</small></div><dl class="dose-facts"><dt>Doses tested</dt><dd>2.5 g to 10 g a day by mouth, usually for 8 to 24 weeks.</dd><dt>Status</dt><dd>A food supplement. Products vary, so follow the product label.</dd></dl></div>
+        </div>
+
+        <h2>No established human dose</h2>
+        <p>For <strong>BPC-157, TB-500, MOTS-c, epitalon, melanotan II and injectable GHK-Cu</strong>, no controlled human trial has established a dose, a schedule or a safe range.</p>
+        <p>Figures on forums and vendor sites are scaled up from animal studies or copied from one site to another. This guide does not repeat them, because doing so would make a guess look like a fact.</p>
+        <div class="note warn"><span data-icon="info"></span><div>Label details change. This page was last reviewed in November 2026. Check the current prescribing information for your product, and ask a pharmacist if anything differs.</div></div>
       </div>
     </section>
 
@@ -1321,6 +1388,7 @@ var PFG_PEPTIDES = [
     library: '<svg viewBox="0 0 20 20"><path fill="currentColor" d="M4.5 2H15a1 1 0 011 1v11.5H5.25a1.25 1.25 0 000 2.5H16v1H5a2 2 0 01-2-2V3.5A1.5 1.5 0 014.5 2z"/></svg>',
     finder: '<svg viewBox="0 0 20 20"><path fill="currentColor" fill-rule="evenodd" d="M10 2a8 8 0 110 16 8 8 0 010-16zm3.4 4.6L8.7 8.7l-2.1 4.7 4.7-2.1z"/></svg>',
     calculator: '<svg viewBox="0 0 20 20"><path fill="currentColor" fill-rule="evenodd" d="M5.5 2h9A2.5 2.5 0 0117 4.5v11a2.5 2.5 0 01-2.5 2.5h-9A2.5 2.5 0 013 15.5v-11A2.5 2.5 0 015.5 2zM6 5v3h8V5zm0 5v2h2v-2zm3 0v2h2v-2zm3 0v2h2v-2zm-6 3v2h2v-2zm3 0v2h2v-2zm3 0v2h2v-2z"/></svg>',
+    dosing: '<svg viewBox="0 0 20 20"><path fill="currentColor" d="M3 15.5h3v-4H3zm4.5 0h3v-7h-3zm4.5 0h3V5h-3zM2.5 17h15v1.2h-15z"/></svg>',
     pro: '<svg viewBox="0 0 20 20"><path fill="currentColor" d="M10 1.8l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L10 14.2 5 17l1.2-5.6L2 7.6l5.6-.6z"/></svg>',
     safety: '<svg viewBox="0 0 20 20"><path fill="currentColor" fill-rule="evenodd" d="M10 1.5l7 2.8v5.1c0 4.3-2.9 7.7-7 9.1-4.1-1.4-7-4.8-7-9.1V4.3zm3.2 5.6L9 11.3 7 9.3l-1.2 1.2L9 13.7l5.4-5.4z"/></svg>',
     chevLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
@@ -1607,11 +1675,12 @@ var PFG_PEPTIDES = [
     { id: 'library', label: 'Library' },
     { id: 'finder', label: 'What fits me' },
     { id: 'calculator', label: 'Calculator' },
+    { id: 'dosing', label: 'Dosing guide' },
     { sep: true },
     { id: 'safety', label: 'Safety & sources' },
     { id: 'pro', label: 'Pro, coming soon' }
   ];
-  var TITLES = { home: 'Peptide Field Guide', today: 'Today', upcoming: 'Upcoming', library: 'Library', finder: 'What fits me', calculator: 'Calculator', safety: 'Safety & sources', pro: 'Pro' };
+  var TITLES = { home: 'Peptide Field Guide', today: 'Today', upcoming: 'Upcoming', library: 'Library', finder: 'What fits me', calculator: 'Calculator', dosing: 'Dosing guide', safety: 'Safety & sources', pro: 'Pro' };
   function renderNav() {
     var dueToday = dosesForDate(todayDate()).filter(function (x) { return !state.checked[x.key]; }).length;
     function html(home) {
@@ -1633,7 +1702,7 @@ var PFG_PEPTIDES = [
     });
   }
 
-  var VIEWS = ['home', 'today', 'upcoming', 'library', 'finder', 'calculator', 'safety', 'pro'];
+  var VIEWS = ['home', 'today', 'upcoming', 'library', 'finder', 'calculator', 'dosing', 'safety', 'pro'];
   var mq = window.matchMedia('(min-width: 820px)');
   var current = null, firstRoute = true;
   function route() {
@@ -1669,6 +1738,20 @@ var PFG_PEPTIDES = [
   function onScroll() { $('topbar').classList.toggle('scrolled', window.scrollY > 40); }
   window.addEventListener('scroll', onScroll, { passive: true });
 
+
+  /* ---------------- Visit counter (one anonymous row per browser per day) ---------------- */
+  (function () {
+    try {
+      if (!/^https?:$/.test(location.protocol) || /claude\.ai|claudeusercontent|localhost|127\.0\.0\.1/.test(location.hostname)) return;
+      var day = new Date().toISOString().slice(0, 10);
+      var raw = localStorage.getItem('pfg.visit'), v = raw ? JSON.parse(raw) : {};
+      if (v.day === day) return;
+      if (!v.id) v.id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, function () { return (Math.random() * 16 | 0).toString(16); });
+      fetch('https://nmgchzwbzqfxhflhmhyd.supabase.co/rest/v1/visits', { method: 'POST', headers: { 'apikey': 'sb_publishable_ZrdUYm6CNYathKt9UbAw7w_J1vSN8LG', 'Content-Type': 'application/json', 'Prefer': 'return=minimal' }, body: JSON.stringify({ visitor: v.id }) })
+        .then(function (r) { if (r.ok || r.status === 409) { v.day = day; try { localStorage.setItem('pfg.visit', JSON.stringify(v)); } catch (e) {} } })
+        .catch(function () {});
+    } catch (e) {}
+  })();
 
   /* ---------------- Pro waitlist ---------------- */
   var WAITLIST_URL = 'https://nmgchzwbzqfxhflhmhyd.supabase.co/rest/v1/pro_waitlist';
@@ -2351,5 +2434,4 @@ var PFG_PEPTIDES = [
   };
 })();
 </script>
-
 </body></html>
